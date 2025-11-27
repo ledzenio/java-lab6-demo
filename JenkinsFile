@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    environment {
+        MAVEN_OPTS = '-Dmaven.test.failure.ignore=false'
+    }
+
+    triggers {
+        pollSCM('H/2 * * * *')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[url: 'file:///E:/repos/java-lab6.git']]
+                ])
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'mvn -v'
+                bat 'mvn -B -U clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'mvn -B test'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                bat 'mvn -B package'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                }
+            }
+        }
+
+        stage('Deploy (Demo)') {
+            when {
+                branch 'main'
+            }
+            steps {
+                bat 'echo "This would deploy the application in real environment"'
+                bat 'java -jar target/java-lab6-demo-1.0.0.jar Student'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline finished for branch: ${env.BRANCH_NAME}"
+        }
+        success {
+            bat 'echo "BUILD SUCCESSFUL!"'
+        }
+        failure {
+            bat 'echo "BUILD FAILED!"'
+        }
+    }
+}
