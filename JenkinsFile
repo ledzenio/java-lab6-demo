@@ -19,7 +19,7 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM',
                     branches: [[name: '*/main']],
-                    userRemoteConfigs: [[url: 'file:///E:/repos/java-lab6.git']]
+                    userRemoteConfigs: [[url: 'https://github.com/ledzenio/java-lab6-demo.git']]
                 ])
             }
         }
