@@ -1,5 +1,5 @@
 package com.store;
-
+// TEST: This is a test comment
 /**
  * Класс задачи
  */
