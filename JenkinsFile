@@ -61,16 +61,16 @@ pipeline {
                 bat 'echo "=== DEMO: Testing the application ==="'
                 bat 'echo "1. Showing initial tasks:"'
                 bat 'java -jar target/java-lab6-demo-1.0.0.jar list'
-                
+
                 bat 'echo "2. Adding a new task:"'
                 bat 'java -jar target/java-lab6-demo-1.0.0.jar add "CI/CD Demo Task"'
-                
+
                 bat 'echo "3. Completing a task:"'
                 bat 'java -jar target/java-lab6-demo-1.0.0.jar complete 4'
-                
+
                 bat 'echo "4. Showing statistics:"'
                 bat 'java -jar target/java-lab6-demo-1.0.0.jar stats'
-                
+
                 bat 'echo "=== DEMO COMPLETED ==="'
             }
         }
